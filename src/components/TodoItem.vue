@@ -153,6 +153,7 @@
                 this.item.steps.splice(index, 1)
             },
             editItem() {
+                this.itemDefault = JSON.parse(JSON.stringify(this.item)) 
                 this.editMode = true
 
                 this.$nextTick(() => {
@@ -162,7 +163,7 @@
             saveItem() {
                 if (!this.allEmptyCheck()) {
                     this.todoStore.saveItem(this.item, this.index)
-
+                    
                     this.itemDefault = this.item
                     this.editMode = false
                 } else {
