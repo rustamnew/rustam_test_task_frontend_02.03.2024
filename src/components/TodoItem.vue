@@ -129,6 +129,7 @@
             itemProp: {
                 handler(val, oldVal) {
                     this.item = val
+                    this.itemDefault = val
                 },
                 deep: true
             },
