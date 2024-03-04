@@ -77,7 +77,6 @@
         methods: {
             allEmptyCheck() {
                 const allEmpty = !this.item.title && !this.item.text && !this.item.steps.length
-                console.log(allEmpty)
                 return allEmpty
             },
             addStep() {

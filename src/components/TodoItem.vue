@@ -21,7 +21,7 @@
                 <textarea placeholder="Описание" v-model="item.text" @input="resizeTextarea()" ref="textarea"></textarea>
             </div>
             
-            <ul>
+            <ul class="steps">
                 <li v-for="step, index in item.steps" :key="index" class="step">
                     <input v-model="step.checked" type="checkbox">
                     <input type="text" v-model="step.title" placeholder="Название этапа">
@@ -59,7 +59,7 @@
                 {{ item.text }}
             </div>
 
-            <ul v-if="item.steps">
+            <ul class="steps" v-if="item.steps">
                 <li v-for="step, index in item.steps" :key="index" class="step">
                     <label>
                         <input v-model="step.checked" @change="saveItem()" type="checkbox">
@@ -84,16 +84,16 @@
         title="Удалить задачу" 
         message="Отменить это действие будет невозможно" 
         mode="confirm"
-        :callback="() => {removeItem(index)}" 
-        @cancel="confirmRemove = false" 
+        :callback="() => {removeItem()}" 
+        @close="confirmRemove = false" 
         />
 
         <Modal 
         v-if="error.showError === true"
         :message="error.message" 
         mode="message"
-        :callback="() => {removeItem(index)}" 
-        @cancel="error.showError = false" 
+        :callback="() => {removeItem()}" 
+        @close="error.showError = false" 
         />
     </Teleport>
 
@@ -125,6 +125,14 @@
                 this.editMode = true
             }
         },
+        watch: {
+            itemProp: {
+                handler(val, oldVal) {
+                    this.item = val
+                },
+                deep: true
+            },
+        },
         props: {
             itemProp: Object,
             index: Number
@@ -132,7 +140,6 @@
         methods: {
             allEmptyCheck() {
                 const allEmpty = !this.item.title && !this.item.text && !this.item.steps.length
-                console.log(allEmpty)
                 return allEmpty
             },
             addStep() {
@@ -170,8 +177,8 @@
             confirmRemoveItem() {
                 this.confirmRemove = true
             },
-            removeItem(index) {
-                this.todoStore.removeItem(index)
+            removeItem() {
+                this.todoStore.removeItem(this.index)
             },
             resizeTextarea() {
                 const textarea = this.$refs.textarea;
@@ -221,7 +228,8 @@
         display: flex;
         flex-direction: column;
         flex-shrink: 0;
-        width: 350px;
+        width: 100%;
+        max-width: 350px;
 
         .title {
             margin-bottom: 0.5rem;
@@ -321,13 +329,6 @@
             .remove {
                 background-color: gray;
             }
-        }
-    }
-
-
-    @media (max-width: 800px) {
-        .todo-item {
-            width: 100%;
         }
     }
     
